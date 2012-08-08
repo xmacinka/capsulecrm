@@ -45,12 +45,16 @@ module CapsuleCRM
       @id.to_i
     end
 
+
+    # nodoc
     def created_at
       @created_at ||= if !raw_data.has_key?("createdOn")
         Time.parse(raw_data["createdOn"])
       end
     end
 
+
+    # nodoc
     def updated_at
       @updated_at ||= if !raw_data.has_key?("updatedOn")
         Time.parse(raw_data["updatedOn"])
