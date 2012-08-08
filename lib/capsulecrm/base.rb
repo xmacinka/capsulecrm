@@ -48,7 +48,7 @@ module CapsuleCRM
 
     # nodoc
     def created_at
-      @created_at ||= if !raw_data.has_key?("createdOn")
+      @created_at ||= if raw_data.has_key?("createdOn")
         Time.parse(raw_data["createdOn"])
       end
     end
@@ -56,7 +56,7 @@ module CapsuleCRM
 
     # nodoc
     def updated_at
-      @updated_at ||= if !raw_data.has_key?("updatedOn")
+      @updated_at ||= if raw_data.has_key?("updatedOn")
         Time.parse(raw_data["updatedOn"])
       end
     end
