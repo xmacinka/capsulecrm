@@ -18,8 +18,12 @@ module CapsuleCRM
   def self.initialize!
     raise ArgumentError, "CapsuleCRM.account_name not defined" if account_name.nil?
     raise ArgumentError, "CapsuleCRM.api_token not defined" if api_token.nil?
-    CapsuleCRM::Base.base_uri base_uri(account_name)
-    CapsuleCRM::Base.basic_auth api_token, 'x'
+
+    base_uri_s = base_uri(account_name)
+    [CapsuleCRM::Base, CapsuleCRM::Person, CapsuleCRM::Email, CapsuleCRM::Tag].each do |klass|
+      klass.base_uri base_uri_s
+      klass.basic_auth api_token, 'x'
+    end
   end
 
 

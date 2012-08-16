@@ -2,6 +2,9 @@ require 'test_helper'
 class PartyDotFindTest < Test::Unit::TestCase
 
   def setup
+    CapsuleCRM.account_name = "foo"
+    CapsuleCRM.api_token = "bar"
+    CapsuleCRM.initialize!
   end
 
   # nodoc
