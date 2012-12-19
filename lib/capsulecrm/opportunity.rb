@@ -5,6 +5,10 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
 
   define_attribute_methods [:name]
 
+  def self.get_path
+    '/api/opportunity'
+  end
+  
 
   # nodoc
   def attributes
