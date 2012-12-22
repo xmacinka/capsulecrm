@@ -1,9 +1,13 @@
 class CapsuleCRM::Opportunity < CapsuleCRM::Base
 
   attr_accessor :name
+  attr_accessor :currency
+  attr_accessor :value
+  attr_accessor :milestone
+  attr_accessor :party_id
 
 
-  define_attribute_methods [:name]
+  define_attribute_methods [:name, :currency, :value, :milestone]
 
   def self.get_path
     '/api/opportunity'
@@ -13,7 +17,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   # nodoc
   def attributes
     attrs = {}
-    arr = [:name]
+    arr = [:name, :currency, :value, :milestone]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -26,6 +30,26 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     name_will_change! unless value == name
     @name = value
   end
+
+  # nodoc
+  def currency=(value)
+    currency_will_change! unless value == currency
+    @currency = value
+  end
+
+  # nodoc
+  def value=(value2)
+    value_will_change! unless value2 == value
+    @value = value2
+  end
+
+
+  # nodoc
+  def milestone=(value)
+    milestone_will_change! unless value == milestone
+    @milestone = value
+  end
+
 
   # nodoc
   #def organisation
@@ -45,7 +69,8 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
 
   # nodoc
   def create
-    path = '/api/opportunity'
+    raise ArgumentError, "party_id not defined" if self.party_id.nil?
+    path = '/api/party/'+self.party_id.to_s+'/opportunity'
     options = {:root => 'opportunity', :path => path}
     new_id = self.class.create dirty_attributes, options
     unless new_id
@@ -95,7 +120,10 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   # nodoc
   def self.xml_map
     map = {
-      'name' => 'name'
+      'name' => 'name',
+      'currency' => 'currency',
+      'value' => 'value',
+      'milestone' => 'milestone'
     }
     super.merge map
   end
