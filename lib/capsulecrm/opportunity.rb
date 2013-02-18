@@ -63,6 +63,18 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     new_record?? create : update
   end
 
+  def get_parties
+    options = nil
+    params = nil
+    @@last_response = self.class.get(self.class.get_path+'/'+id.to_s+'/party', :query => params)
+
+    if self.class.last_response['parties']
+      self.class.last_response['parties']
+    else
+      nil
+    end
+  end
+
 
   private
 
