@@ -35,6 +35,11 @@ class CapsuleCRM::Person < CapsuleCRM::Party
     @last_name = value
   end
 
+  # nodoc
+  def job_title=(value)
+    job_title_will_change! unless value == job_title
+    @job_title = value
+  end
 
   # nodoc
   def title=(value)
