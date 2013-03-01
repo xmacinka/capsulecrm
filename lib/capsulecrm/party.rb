@@ -64,6 +64,11 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     '/api/party'
   end
 
+  def delete!
+    path = self.class.get_path
+    path = [path, '/', id].join
+    self.class.delete(path)    
+  end
 
   def self.find_all_by_email(email, options={})
     options[:email] = email
