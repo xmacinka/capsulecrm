@@ -3,6 +3,41 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
   attr_accessor :about
   attr_accessor :name
 
+  define_attribute_methods [:about, :name]
+
+  # nodoc
+  def attributes
+    attrs = {}
+    arr = [:about, :name]
+    arr.each do |key|
+      attrs[key] = self.send(key)
+    end
+    attrs
+  end
+
+  def save
+    new_record?? create : update
+  end
+
+  # nodoc
+  def create
+    path = '/api/organisation'
+    options = {:root => 'organisation', :path => path}
+    new_id = self.class.create attributes, options
+    unless new_id
+      errors << self.class.last_response.response.message
+      return false
+    end
+    @errors = []
+    changed_attributes.clear
+    self.id = new_id
+    self
+  end
+
+  # nodoc
+  def dirty_attributes
+    Hash[attributes.select { |k,v| changed.include? k.to_s }]
+  end
 
   # nodoc
   def people
