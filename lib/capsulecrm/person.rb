@@ -63,7 +63,7 @@ class CapsuleCRM::Person < CapsuleCRM::Party
   def create
     path = '/api/person'
     options = {:root => 'person', :path => path}
-    new_id = self.class.create dirty_attributes, options
+    new_id = self.class.create attributes, options
     unless new_id
       errors << self.class.last_response.response.message
       return false
