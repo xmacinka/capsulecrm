@@ -1,5 +1,7 @@
 class CapsuleCRM::Party < CapsuleCRM::Base
 
+  define_attribute_methods [:contacts]
+
   # nodoc
   def addresses
     return @addresses if @addresses
