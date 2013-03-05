@@ -5,6 +5,25 @@ class CreatePersonTest < Test::Unit::TestCase
   def setup
   end
 
+  def test_xml_generation
+    # Setup
+    person = CapsuleCRM::Person.new
+    person.first_name = 'Homer'
+    person.last_name = 'Simpson'
+    # test that XML is generated correctly
+    xml = CapsuleCRM::Person.attributes_to_xml(person.attributes, 'person')
+    assert_equal xml, <<-EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<person>
+  <about nil="true"/>
+  <firstName>Homer</firstName>
+  <lastName>Simpson</lastName>
+  <title nil="true"/>
+  <jobTitle nil="true"/>
+  <organisationId nil="true"/>
+</person>
+    EOF
+  end
 
   # nodoc
   def test_success
