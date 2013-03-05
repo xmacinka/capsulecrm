@@ -116,7 +116,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   
   # nodoc
   def self.init_many(response)
-    data = response['parties']['opportunity']
+    data = response['parties'].try(:[], 'opportunity') || response['opportunities'].try(:[], 'opportunity')
     CapsuleCRM::Collection.new(self, data)
   end
 
