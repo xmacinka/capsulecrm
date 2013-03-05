@@ -114,7 +114,14 @@ module CapsuleCRM
         key = map[k.to_s]
         xml[key] = v
       end
-      xml.to_xml xml_options.merge(:root => xml_root)
+      if wrapper = xml_options.delete(:wrap)
+        xml = {
+          xml_root => xml
+        }
+        xml.to_xml xml_options.merge(:root => wrapper)
+      else
+        xml.to_xml xml_options.merge(:root => xml_root)
+      end
     end
 
 
@@ -159,7 +166,7 @@ module CapsuleCRM
     # returns false if something went wrong (use last_response() to debug)
     def self.create(attributes, options={})
       return false if attributes.empty?
-      xml = attributes_to_xml(attributes)
+      xml = attributes_to_xml(attributes, options)
       @@last_response = post options[:path], xml_request_options(xml)
       return false unless last_response.code == 201
       last_response.headers['location'].split('/').last
@@ -170,7 +177,7 @@ module CapsuleCRM
     # on failure.
     def self.update(id, attributes, options={})
       return true if attributes.empty?
-      xml = attributes_to_xml(attributes)
+      xml = attributes_to_xml(attributes, options)
       @@last_response = put options[:path], xml_request_options(xml)
       last_response.code == 200
     end
