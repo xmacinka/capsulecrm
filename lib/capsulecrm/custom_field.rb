@@ -5,6 +5,15 @@ class CapsuleCRM::CustomField < CapsuleCRM::Child
   attr_accessor :label
   attr_accessor :text
 
+  def attributes
+    attrs = {}
+    arr = [:label, :text]
+    arr.each do |key|
+      attrs[key] = self.send(key)
+    end
+    attrs
+  end
+
 
   # nodoc
   def boolean=(value)
@@ -27,6 +36,17 @@ class CapsuleCRM::CustomField < CapsuleCRM::Child
 
 
   # nodoc
+  def save
+    # All things are PUTs
+    update
+  end
+
+  # nodoc
+  def self.xml_root
+    'customField'
+  end
+
+  # nodoc
   def self.xml_map
     map = {
       'label' => 'label',
@@ -37,5 +57,21 @@ class CapsuleCRM::CustomField < CapsuleCRM::Child
     super.merge map
   end
 
+  private
 
+  # nodoc
+  def dirty_attributes
+    Hash[attributes.select { |k,v| changed.include? k.to_s }]
+  end
+
+  # nodoc
+  def update
+    # Update
+    path = parent.class.get_path+'/'+parent.id.to_s+'/customfields'
+    options = {:path => path, :wrap => 'customFields'}
+    success = self.class.update id, attributes, options
+    changed_attributes.clear if success
+    success
+  end
+  
 end
