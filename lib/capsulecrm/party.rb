@@ -36,6 +36,14 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     @opportunities = CapsuleCRM::Opportunity.init_many(last_response)
   end
 
+  def tasks
+    return @tasks if @tasks
+    path = self.class.get_path
+    path = [path, '/', id, '/tasks'].join
+    last_response = self.class.get(path)
+    @tasks = CapsuleCRM::Task.init_many(last_response)
+  end
+
   def tag_names
     tags.map(&:name)
   end
