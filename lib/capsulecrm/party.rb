@@ -3,8 +3,8 @@ class CapsuleCRM::Party < CapsuleCRM::Base
   # nodoc
   def addresses
     return @addresses if @addresses
-    data = raw_data['contacts'].try(:[], 'address')
-    @addresses = data ? CapsuleCRM::Address.init_many(self, data) : []
+    data = raw_data.try(:[], 'contacts').try(:[], 'address')
+    @addresses = data ? CapsuleCRM::Address.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Address, [])
   end
 
   # nodoc
@@ -33,28 +33,33 @@ class CapsuleCRM::Party < CapsuleCRM::Base
   # nodoc
   # Merge together all contact details into a single contacts structure for uploading
   def contacts
-    emails + phone_numbers + websites + addresses
+    collection = CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Contact, [])
+    collection.concat emails
+    collection.concat phone_numbers
+    collection.concat websites
+    collection.concat addresses
+    collection
   end
 
   # nodoc
   def emails
     return @emails if @emails
-    data = raw_data['contacts'].try(:[], 'email')
-    @emails = data ? CapsuleCRM::Email.init_many(self, data) : []
+    data = raw_data.try(:[], 'contacts').try(:[], 'email')
+    @emails = data ? CapsuleCRM::Email.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Email, [])
   end
   
   # nodoc
   def phone_numbers
     return @phone_numbers if @phone_numbers
-    data = raw_data['contacts'].try(:[], 'phone')
-    @phone_numbers = data ? CapsuleCRM::Phone.init_many(self, data) : []
+    data = raw_data.try(:[], 'contacts').try(:[], 'phone')
+    @phone_numbers = data ? CapsuleCRM::Phone.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Phone, [])
   end
 
   # nodoc
   def websites
     return @websites if @websites
-    data = raw_data['contacts'].try(:[], 'website')
-    @websites = data ? CapsuleCRM::Website.init_many(self, data) : []
+    data = raw_data.try(:[], 'contacts').try(:[], 'website')
+    @websites = data ? CapsuleCRM::Website.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Website, [])
   end
 
   def is?(kind)
