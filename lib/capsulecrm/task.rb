@@ -5,9 +5,10 @@ class CapsuleCRM::Task < CapsuleCRM::Base
   attr_accessor :owner
   attr_accessor :category
   attr_accessor :party_id
+  attr_accessor :detail
 
 
-  define_attribute_methods [:description, :due_date_time, :owner, :category]
+  define_attribute_methods [:description, :due_date_time, :owner, :category, :detail]
 
   def self.get_path
     '/api/task'
@@ -16,7 +17,7 @@ class CapsuleCRM::Task < CapsuleCRM::Base
   # nodoc
   def attributes
     attrs = {}
-    arr = [:description, :due_date_time, :owner, :category]
+    arr = [:description, :due_date_time, :owner, :category, :detail]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -87,6 +88,7 @@ class CapsuleCRM::Task < CapsuleCRM::Base
       'dueDateTime' => 'due_date_time',
       'owner' => 'owner',
       'category' => 'category',
+      'detail' => 'detail',
     }
     super.merge map
   end
