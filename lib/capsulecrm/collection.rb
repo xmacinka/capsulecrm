@@ -10,5 +10,12 @@ class CapsuleCRM::Collection < Array
     end
   end
 
+  def to_xml(options)
+    super(options.merge(:root => self.class.xml_root, :skip_types => true))
+  end
+
+  def self.xml_root
+    nil
+  end
 
 end
