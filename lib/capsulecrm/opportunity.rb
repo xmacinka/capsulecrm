@@ -8,9 +8,10 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   attr_accessor :description
   attr_accessor :duration, :duration_basis
   attr_accessor :expected_close_date
+  attr_accessor :owner
 
 
-  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date]
+  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
 
   def self.get_path
     '/api/opportunity'
@@ -20,7 +21,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   # nodoc
   def attributes
     attrs = {}
-    arr = [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date]
+    arr = [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -143,6 +144,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       'duration' => 'duration',
       'durationBasis' => 'duration_basis',
       'expectedCloseDate' => 'expected_close_date',
+      'owner' => 'owner',
     }
     super.merge map
   end
