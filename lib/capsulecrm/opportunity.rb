@@ -83,7 +83,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     raise ArgumentError, "party_id not defined" if self.party_id.nil?
     path = '/api/party/'+self.party_id.to_s+'/opportunity'
     options = {:path => path}
-    new_id = self.class.create dirty_attributes, options
+    new_id = self.class.create attributes, options
     unless new_id
       errors << self.class.last_response.response.message
       return false
