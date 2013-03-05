@@ -4,6 +4,15 @@ class CapsuleCRM::Website < CapsuleCRM::Child
   attr_accessor :url
   attr_accessor :web_service
 
+  # nodoc
+  def attributes
+    attrs = {}
+    arr = [:type, :web_address, :url, :web_service]
+    arr.each do |key|
+      attrs[key] = self.send(key)
+    end
+    attrs
+  end
 
   # nodoc
   def self.xml_map
