@@ -17,6 +17,10 @@ module CapsuleCRM
     attr_accessor :raw_data
     @@last_response = nil
 
+    def attributes
+      []
+    end
+      
 
     # -- HttpParty --
     format      :xml
@@ -87,7 +91,10 @@ module CapsuleCRM
     def self.last_response
       @@last_response
     end
-
+    
+    def to_xml(options)
+      self.class.attributes_to_xml(attributes, options.merge(:root => self.class.xml_root))
+    end
 
     private
 
@@ -99,16 +106,15 @@ module CapsuleCRM
       attributes
     end
 
-
     # uses xml_map() to convert :attributes into an xml string
-    def self.attributes_to_xml(attributes)
+    def self.attributes_to_xml(attributes, xml_options = {})
       xml = {}
       map = xml_map.invert
       attributes.each do |k,v|
         key = map[k.to_s]
         xml[key] = v
       end
-      xml.to_xml :root => xml_root
+      xml.to_xml xml_options.merge(:root => xml_root)
     end
 
 
