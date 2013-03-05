@@ -15,7 +15,7 @@ class CapsuleCRM::Collection < Array
   end
 
   def self.xml_root
-    nil
+    name.demodulize.downcase
   end
 
 end

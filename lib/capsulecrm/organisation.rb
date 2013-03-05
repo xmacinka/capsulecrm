@@ -64,11 +64,6 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
 
 
   # nodoc
-  def self.xml_root
-    'organisation'
-  end
-
-  # nodoc
   def self.xml_map
     map = {
       'about' => 'about',

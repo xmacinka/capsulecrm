@@ -129,11 +129,6 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
 
 
   # nodoc
-  def self.xml_root
-    'opportunity'
-  end
-
-  # nodoc
   def self.xml_map
     map = {
       'name' => 'name',
