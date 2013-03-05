@@ -1,13 +1,11 @@
 class CapsuleCRM::Party < CapsuleCRM::Base
 
-
   # nodoc
   def addresses
     return @addresses if @addresses
     data = raw_data['contacts'].try(:[], 'address')
-    @addresses = CapsuleCRM::Address.init_many(self, data)
+    @addresses = data ? CapsuleCRM::Address.init_many(self, data) : []
   end
-
 
   # nodoc
   def custom_fields
@@ -33,25 +31,30 @@ class CapsuleCRM::Party < CapsuleCRM::Base
   end
 
   # nodoc
+  # Merge together all contact details into a single contacts structure for uploading
+  def contacts
+    emails + phone_numbers + websites + addresses
+  end
+
+  # nodoc
   def emails
     return @emails if @emails
     data = raw_data['contacts'].try(:[], 'email')
-    @emails = CapsuleCRM::Email.init_many(self, data)
+    @emails = data ? CapsuleCRM::Email.init_many(self, data) : []
   end
-
-
+  
   # nodoc
   def phone_numbers
     return @phone_numbers if @phone_numbers
     data = raw_data['contacts'].try(:[], 'phone')
-    @phone_numbers = CapsuleCRM::Phone.init_many(self, data)
+    @phone_numbers = data ? CapsuleCRM::Phone.init_many(self, data) : []
   end
 
   # nodoc
   def websites
     return @websites if @websites
     data = raw_data['contacts'].try(:[], 'website')
-    @websites = CapsuleCRM::Website.init_many(self, data)
+    @websites = data ? CapsuleCRM::Website.init_many(self, data) : []
   end
 
   def is?(kind)
