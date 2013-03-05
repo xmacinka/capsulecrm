@@ -78,12 +78,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
 
   private
 
-
   # nodoc
   def create
     raise ArgumentError, "party_id not defined" if self.party_id.nil?
     path = '/api/party/'+self.party_id.to_s+'/opportunity'
-    options = {:root => 'opportunity', :path => path}
+    options = {:path => path}
     new_id = self.class.create dirty_attributes, options
     unless new_id
       errors << self.class.last_response.response.message
@@ -128,6 +127,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     new(attributes_from_xml_hash(data))
   end
 
+
+  # nodoc
+  def self.xml_root
+    'opportunity'
+  end
 
   # nodoc
   def self.xml_map

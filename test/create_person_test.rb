@@ -11,7 +11,7 @@ class CreatePersonTest < Test::Unit::TestCase
     person.first_name = 'Homer'
     person.last_name = 'Simpson'
     # test that XML is generated correctly
-    xml = CapsuleCRM::Person.attributes_to_xml(person.attributes, 'person')
+    xml = CapsuleCRM::Person.attributes_to_xml(person.attributes)
     assert_equal xml, <<-EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <person>

@@ -22,7 +22,7 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
   # nodoc
   def create
     path = '/api/organisation'
-    options = {:root => 'organisation', :path => path}
+    options = {:path => path}
     new_id = self.class.create attributes, options
     unless new_id
       errors << self.class.last_response.response.message
@@ -62,6 +62,11 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
     new(attributes_from_xml_hash(data))
   end
 
+
+  # nodoc
+  def self.xml_root
+    'organisation'
+  end
 
   # nodoc
   def self.xml_map

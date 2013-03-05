@@ -101,14 +101,14 @@ module CapsuleCRM
 
 
     # uses xml_map() to convert :attributes into an xml string
-    def self.attributes_to_xml(attributes, root=nil)
+    def self.attributes_to_xml(attributes)
       xml = {}
       map = xml_map.invert
       attributes.each do |k,v|
         key = map[k.to_s]
         xml[key] = v
       end
-      xml.to_xml :root => root
+      xml.to_xml :root => xml_root
     end
 
 
@@ -153,7 +153,7 @@ module CapsuleCRM
     # returns false if something went wrong (use last_response() to debug)
     def self.create(attributes, options={})
       return false if attributes.empty?
-      xml = attributes_to_xml(attributes, options.delete(:root))
+      xml = attributes_to_xml(attributes)
       @@last_response = post options[:path], xml_request_options(xml)
       return false unless last_response.code == 201
       last_response.headers['location'].split('/').last
@@ -164,11 +164,15 @@ module CapsuleCRM
     # on failure.
     def self.update(id, attributes, options={})
       return true if attributes.empty?
-      xml = attributes_to_xml(attributes, options.delete(:root))
+      xml = attributes_to_xml(attributes)
       @@last_response = put options[:path], xml_request_options(xml)
       last_response.code == 200
     end
 
+    # nodoc
+    def self.xml_root
+      nil
+    end
 
     # nodoc
     def self.xml_map
