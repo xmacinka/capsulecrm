@@ -1,13 +1,13 @@
 class CapsuleCRM::Party < CapsuleCRM::Base
 
+  define_attribute_methods [:contacts]
 
   # nodoc
   def addresses
     return @addresses if @addresses
-    data = raw_data['contacts'].try(:[], 'address')
-    @addresses = CapsuleCRM::Address.init_many(self, data)
+    data = raw_data.try(:[], 'contacts').try(:[], 'address')
+    @addresses = data ? CapsuleCRM::Address.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Address, [])
   end
-
 
   # nodoc
   def custom_fields
@@ -28,30 +28,56 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     @tags = CapsuleCRM::Tag.init_many(self, data)
   end
 
+  def opportunities
+    return @opportunities if @opportunities
+    path = self.class.get_path
+    path = [path, '/', id, '/opportunity'].join
+    last_response = self.class.get(path)
+    @opportunities = CapsuleCRM::Opportunity.init_many(last_response)
+  end
+
+  def tasks
+    return @tasks if @tasks
+    path = self.class.get_path
+    path = [path, '/', id, '/tasks'].join
+    last_response = self.class.get(path)
+    @tasks = CapsuleCRM::Task.init_many(last_response)
+  end
+
   def tag_names
     tags.map(&:name)
   end
 
   # nodoc
-  def emails
-    return @emails if @emails
-    data = raw_data['contacts'].try(:[], 'email')
-    @emails = CapsuleCRM::Email.init_many(self, data)
+  # Merge together all contact details into a single contacts structure for uploading
+  def contacts
+    collection = CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Contact, [])
+    collection.concat emails
+    collection.concat phone_numbers
+    collection.concat websites
+    collection.concat addresses
+    collection
   end
 
-
+  # nodoc
+  def emails
+    return @emails if @emails
+    data = raw_data.try(:[], 'contacts').try(:[], 'email')
+    @emails = data ? CapsuleCRM::Email.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Email, [])
+  end
+  
   # nodoc
   def phone_numbers
     return @phone_numbers if @phone_numbers
-    data = raw_data['contacts'].try(:[], 'phone')
-    @phone_numbers = CapsuleCRM::Phone.init_many(self, data)
+    data = raw_data.try(:[], 'contacts').try(:[], 'phone')
+    @phone_numbers = data ? CapsuleCRM::Phone.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Phone, [])
   end
 
   # nodoc
   def websites
     return @websites if @websites
-    data = raw_data['contacts'].try(:[], 'website')
-    @websites = CapsuleCRM::Website.init_many(self, data)
+    data = raw_data.try(:[], 'contacts').try(:[], 'website')
+    @websites = data ? CapsuleCRM::Website.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Website, [])
   end
 
   def is?(kind)
@@ -64,6 +90,11 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     '/api/party'
   end
 
+  def delete!
+    path = self.class.get_path
+    path = [path, '/', id].join
+    self.class.delete(path)    
+  end
 
   def self.find_all_by_email(email, options={})
     options[:email] = email

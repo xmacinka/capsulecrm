@@ -3,11 +3,15 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   attr_accessor :name
   attr_accessor :currency
   attr_accessor :value
-  attr_accessor :milestone
+  attr_accessor :milestone, :probability
   attr_accessor :party_id
+  attr_accessor :description
+  attr_accessor :duration, :duration_basis
+  attr_accessor :expected_close_date
+  attr_accessor :owner
 
 
-  define_attribute_methods [:name, :currency, :value, :milestone]
+  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
 
   def self.get_path
     '/api/opportunity'
@@ -17,7 +21,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   # nodoc
   def attributes
     attrs = {}
-    arr = [:name, :currency, :value, :milestone]
+    arr = [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -74,17 +78,25 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       nil
     end
   end
-
+  
+  # nodoc
+  def custom_fields
+    return @custom_fields if @custom_fields
+    path = self.class.get_path
+    path = [path, '/', id, '/customfield'].join
+    last_response = self.class.get(path)
+    data = last_response['customFields'].try(:[], 'customField')
+    @custom_fields = CapsuleCRM::CustomField.init_many(self, data)
+  end
 
   private
-
 
   # nodoc
   def create
     raise ArgumentError, "party_id not defined" if self.party_id.nil?
     path = '/api/party/'+self.party_id.to_s+'/opportunity'
-    options = {:root => 'opportunity', :path => path}
-    new_id = self.class.create dirty_attributes, options
+    options = {:path => path}
+    new_id = self.class.create attributes, options
     unless new_id
       errors << self.class.last_response.response.message
       return false
@@ -117,7 +129,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   
   # nodoc
   def self.init_many(response)
-    data = response['parties']['opportunity']
+    data = response['parties'].try(:[], 'opportunity') || response['opportunities'].try(:[], 'opportunity')
     CapsuleCRM::Collection.new(self, data)
   end
 
@@ -135,7 +147,13 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       'name' => 'name',
       'currency' => 'currency',
       'value' => 'value',
-      'milestone' => 'milestone'
+      'milestone' => 'milestone',
+      'probability' => 'probability',
+      'description' => 'description',
+      'duration' => 'duration',
+      'durationBasis' => 'duration_basis',
+      'expectedCloseDate' => 'expected_close_date',
+      'owner' => 'owner',
     }
     super.merge map
   end

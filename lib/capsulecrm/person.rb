@@ -14,7 +14,7 @@ class CapsuleCRM::Person < CapsuleCRM::Party
   # nodoc
   def attributes
     attrs = {}
-    arr = [:about, :first_name, :last_name, :title, :job_title]
+    arr = [:about, :first_name, :last_name, :title, :job_title, :organisation_id, :contacts]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -35,6 +35,11 @@ class CapsuleCRM::Person < CapsuleCRM::Party
     @last_name = value
   end
 
+  # nodoc
+  def job_title=(value)
+    job_title_will_change! unless value == job_title
+    @job_title = value
+  end
 
   # nodoc
   def title=(value)
@@ -62,8 +67,8 @@ class CapsuleCRM::Person < CapsuleCRM::Party
   # nodoc
   def create
     path = '/api/person'
-    options = {:root => 'person', :path => path}
-    new_id = self.class.create dirty_attributes, options
+    options = {:path => path}
+    new_id = self.class.create attributes, options
     unless new_id
       errors << self.class.last_response.response.message
       return false
