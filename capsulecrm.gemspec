@@ -16,6 +16,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'activemodel', '>= 3.0.5'
   s.add_dependency 'activesupport', '>= 3.0.5'
 
+  s.add_development_dependency 'vcr'     , '< 2.0'
+  s.add_development_dependency 'webmock' , '>= 1.7.0', '< 1.8'
+  s.add_development_dependency 'rake'
+
   s.rubyforge_project = "capsulecrm"
 
   s.files         = `git ls-files`.split("\n")
