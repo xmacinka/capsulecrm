@@ -4,10 +4,11 @@ class CapsuleCRM::CustomField < CapsuleCRM::Child
   attr_accessor :date
   attr_accessor :label
   attr_accessor :text
+  attr_accessor :tag
 
   def attributes
     attrs = {}
-    arr = [:label, :text]
+    arr = [:label, :text, :tag, :date, :boolean]
     arr.each do |key|
       attrs[key] = self.send(key)
     end
@@ -52,7 +53,8 @@ class CapsuleCRM::CustomField < CapsuleCRM::Child
       'label' => 'label',
       'text' => 'text',
       'date' => 'date',
-      'boolean' => 'boolean'
+      'boolean' => 'boolean',
+      'tag' => 'tag'
     }
     super.merge map
   end
