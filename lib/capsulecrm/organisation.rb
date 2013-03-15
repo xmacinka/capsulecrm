@@ -33,6 +33,15 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
     self.id = new_id
     self
   end
+  
+  # nodoc
+  def update
+    path = '/api/organisation/' + id.to_s
+    options = {:root => 'organisation', :path => path}
+    success = self.class.update id, dirty_attributes, options
+    changed_attributes.clear if success
+    success
+  end
 
   # nodoc
   def dirty_attributes
