@@ -23,7 +23,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     attrs = {}
     arr = [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
     arr.each do |key|
-      attrs[key] = self.send(key)
+      attrs[key] = self.send(key) if self.send(key)
     end
     attrs
   end
