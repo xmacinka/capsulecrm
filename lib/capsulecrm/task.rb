@@ -5,6 +5,7 @@ class CapsuleCRM::Task < CapsuleCRM::Base
   attr_accessor :owner
   attr_accessor :category
   attr_accessor :party_id
+  attr_accessor :opportunity_id
   attr_accessor :detail
 
 
@@ -33,8 +34,15 @@ class CapsuleCRM::Task < CapsuleCRM::Base
 
   # nodoc
   def create
-    raise ArgumentError, "party_id not defined" if self.party_id.nil?
-    path = '/api/party/'+self.party_id.to_s+'/task'
+    path = ''
+    if self.party_id
+      path = '/api/party/'+self.party_id.to_s+'/task'
+    elsif self.opportunity_id
+      path = '/api/opportunity/'+self.opportunity_id.to_s+'/task'
+    else
+      raise ArgumentError, "party_id or opportunity_id not defined"
+    end
+
     options = {:path => path}
     new_id = self.class.create attributes, options
     unless new_id
