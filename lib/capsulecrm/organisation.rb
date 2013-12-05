@@ -8,7 +8,7 @@ class CapsuleCRM::Organisation < CapsuleCRM::Party
   # nodoc
   def attributes
     attrs = {}
-    arr = [:about, :name]
+    arr = [:about, :name, :contacts]
     arr.each do |key|
       attrs[key] = self.send(key)
     end

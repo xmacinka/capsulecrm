@@ -19,11 +19,22 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     @custom_fields = CapsuleCRM::CustomField.init_many(self, data)
   end
 
+  #nodoc
+  def history_items
+    return @history_items if @history_items
+    path = self.class.get_path
+    path = [path, '/', id, '/history'].join
+    last_response = self.class.get(path)
+    data = last_response['history'].try(:[], 'historyItem')
+    @history_items = CapsuleCRM::HistoryItem.init_many(self, data)
+  end
+
   def tags
     return @tags if @tags
     path = self.class.get_path
     path = [path, '/', id, '/tag'].join
     last_response = self.class.get(path)
+    #raise last_response.inspect
     data = last_response['tags'].try(:[], 'tag')
     @tags = CapsuleCRM::Tag.init_many(self, data)
   end
