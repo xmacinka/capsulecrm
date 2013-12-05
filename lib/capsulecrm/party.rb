@@ -9,6 +9,18 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     @addresses = data ? CapsuleCRM::Address.init_many(self, data) : CapsuleCRM::ContactCollection.new(self,CapsuleCRM::Address, [])
   end
 
+  @@custom_field_definitions = nil
+  # nodoc
+  def self.custom_field_definitions
+    @@custom_field_definitions ||= begin
+      path = self.get_path
+      path = [path, '/customfield/definitions'].join
+      last_response = self.get(path)
+      data = last_response['customFieldDefinitions'].try(:[], 'customFieldDefinition')
+      CapsuleCRM::CustomFieldDefinition.init_many(self, data)
+    end
+  end
+  
   # nodoc
   def custom_fields
     return @custom_fields if @custom_fields
