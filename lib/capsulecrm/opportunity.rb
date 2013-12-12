@@ -154,6 +154,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       'durationBasis' => 'duration_basis',
       'expectedCloseDate' => 'expected_close_date',
       'owner' => 'owner',
+      'partyId' => 'party_id',
     }
     super.merge map
   end
