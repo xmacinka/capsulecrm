@@ -8,10 +8,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   attr_accessor :description
   attr_accessor :duration, :duration_basis
   attr_accessor :expected_close_date
+  attr_accessor :actual_close_date
   attr_accessor :owner
 
 
-  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
+  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :actual_close_date, :owner]
 
   def self.get_path
     '/api/opportunity'
@@ -153,6 +154,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       'duration' => 'duration',
       'durationBasis' => 'duration_basis',
       'expectedCloseDate' => 'expected_close_date',
+      'actualCloseDate' => 'actual_close_date',
       'owner' => 'owner',
       'partyId' => 'party_id',
     }
