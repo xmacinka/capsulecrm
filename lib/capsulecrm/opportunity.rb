@@ -55,6 +55,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     @milestone = value
   end
 
+  # nodoc
+  def expected_close_date=(value)
+    expected_close_date_will_change! unless value == expected_close_date
+    @expected_close_date = value
+  end
 
   # nodoc
   #def organisation
