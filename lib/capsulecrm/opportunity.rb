@@ -8,10 +8,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
   attr_accessor :description
   attr_accessor :duration, :duration_basis
   attr_accessor :expected_close_date
+  attr_accessor :actual_close_date
   attr_accessor :owner
 
 
-  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :owner]
+  define_attribute_methods [:name, :currency, :value, :milestone, :probability, :description, :duration, :duration_basis, :expected_close_date, :actual_close_date, :owner]
 
   def self.get_path
     '/api/opportunity'
@@ -47,6 +48,17 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     @value = value2
   end
 
+  # nodoc
+  def duration=(value)
+    duration_will_change! unless value == duration
+    @duration = value
+  end
+  
+  # nodoc
+  def duration_basis=(value)
+    duration_basis_will_change! unless value == duration_basis
+    @duration_basis = value
+  end
 
   # nodoc
   def milestone=(value)
@@ -54,6 +66,11 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     @milestone = value
   end
 
+  # nodoc
+  def expected_close_date=(value)
+    expected_close_date_will_change! unless value == expected_close_date
+    @expected_close_date = value
+  end
 
   # nodoc
   #def organisation
@@ -153,6 +170,7 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
       'duration' => 'duration',
       'durationBasis' => 'duration_basis',
       'expectedCloseDate' => 'expected_close_date',
+      'actualCloseDate' => 'actual_close_date',
       'owner' => 'owner',
       'partyId' => 'party_id',
     }
