@@ -48,6 +48,17 @@ class CapsuleCRM::Opportunity < CapsuleCRM::Base
     @value = value2
   end
 
+  # nodoc
+  def duration=(value)
+    duration_will_change! unless value == duration
+    @duration = value
+  end
+  
+  # nodoc
+  def duration_basis=(value)
+    duration_basis_will_change! unless value == duration_basis
+    @duration_basis = value
+  end
 
   # nodoc
   def milestone=(value)
