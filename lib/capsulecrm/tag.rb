@@ -33,7 +33,7 @@ class CapsuleCRM::Tag < CapsuleCRM::Child
 
   # nodoc
   def create
-    path = parent.class.get_path+'/'+parent.id.to_s+'/tag/'+name
+    path = parent.class.get_path+'/'+parent.id.to_s+'/tag/'+CGI.escape(name)
     options = {:path => path, :wrap => 'tags'}
     new_id = self.class.create attributes, options
     unless new_id
