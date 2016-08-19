@@ -20,7 +20,7 @@ module CapsuleCRM
     raise ArgumentError, "CapsuleCRM.api_token not defined" if api_token.nil?
 
     base_uri_s = base_uri(account_name)
-    [CapsuleCRM::Base, CapsuleCRM::Party, CapsuleCRM::Opportunity, CapsuleCRM::Organisation, CapsuleCRM::Person, CapsuleCRM::Email, CapsuleCRM::Tag].each do |klass|
+    [CapsuleCRM::Base, CapsuleCRM::Party, CapsuleCRM::Opportunity, CapsuleCRM::Organisation, CapsuleCRM::Person, CapsuleCRM::Email, CapsuleCRM::Tag, CapsuleCRM::Phone, CapsuleCRM::Website, CapsuleCRM::Address, CapsuleCRM::Email, CapsuleCRM::Task, CapsuleCRM::HistoryItem].each do |klass|
       klass.base_uri base_uri_s
       klass.basic_auth api_token, 'x'
     end
