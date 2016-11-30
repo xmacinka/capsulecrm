@@ -197,7 +197,7 @@ module CapsuleCRM
     def self.xml_request_options(xml)
       options = {
         :body => xml,
-        :headers => {'Content-Type' => 'text/xml'},
+        :headers => {'Content-type' => 'application/xml'},
         :parser => Parser::Simple
       }
     end
