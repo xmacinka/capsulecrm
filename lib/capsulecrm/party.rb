@@ -71,6 +71,13 @@ class CapsuleCRM::Party < CapsuleCRM::Base
     tags.map(&:name)
   end
 
+  def save_custom_fields
+    return false if custom_fields.empty? || self.id.nil?
+    xml = custom_fields.to_xml({}).gsub('childcollection>','customFields>')
+    @@last_response = CapsuleCRM::Base.post '/api/party/'+self.id.to_s+'/customfields', CapsuleCRM::Base.xml_request_options(xml)
+    @@last_response.code == 200
+  end
+
   # nodoc
   # Merge together all contact details into a single contacts structure for uploading
   def contacts
