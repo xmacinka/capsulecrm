@@ -101,10 +101,16 @@ class CapsuleCRM::Person < CapsuleCRM::Party
   
   # nodoc
   def self.init_many(response)
-    data = response['parties']['person']
+    begin
+      data = response['parties']['person']
+    rescue MultiXml::ParseError => e
+
+      response = MultiXml.parse(response.body.gsub("\u0000",''))
+      data = response['parties']['person']
+    end
+
     CapsuleCRM::Collection.new(self, data)
   end
-
 
   # nodoc
   def self.init_one(response)
